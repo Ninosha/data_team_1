@@ -5,7 +5,7 @@ from flask import Flask, render_template
 from threading import Thread
 from check_connection import check_connection
 from sql_to_html import sql_to_html
-
+#
 app = Flask(__name__)
 
 conn, cursor = check_connection()
