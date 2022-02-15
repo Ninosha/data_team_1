@@ -19,7 +19,6 @@ def add_to_database(json_data, conn, cursor):
         cursor.execute(sql)
         conn.commit()
 
-    cursor.close()
-    conn.close()
+
 
     return True
