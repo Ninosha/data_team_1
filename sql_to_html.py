@@ -11,4 +11,3 @@ def sql_to_html(table_name):
 
     return df.to_html(classes=["dataframe"]), len(df_in_progress), len(df_finished)
 
-#

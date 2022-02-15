@@ -14,4 +14,3 @@ def check_connection():
 
     except ConnectionError as e:
         return e
-    #
