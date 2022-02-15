@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>TASKMASTER</title>
+    <style>
+        .dataframe {
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .dataframe td, #dataframe th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .dataframe tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .dataframe tr:hover {
+            background-color: #ddd;
+        }
+
+        .dataframe th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #04AA6D;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h1>IN PROGRESS: {{ c.PROG }}</h1>
+<h1>FINISHED: {{ c.FIN }}</h1>
+
+{{ c.TABLE|safe }}
+
+</body>
+</html>
