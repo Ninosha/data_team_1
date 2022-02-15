@@ -1,1 +1,0 @@
-conn.execute = """SELECT COUNT (*) FROM tasks"""
