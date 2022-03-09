@@ -12,13 +12,12 @@ def api_data(url, _id):
     :return: if id is in fetched data: json data, if not: False
     """
 
-    if isinstance(_id, int):
-        r = requests.get(url + str(_id))
-        data = r.json()
-        if data:
-            return json.dumps(data)
-        else:
-            return False
+    r = requests.get(url + str(_id))
+    data = r.json()
+    if data:
+        return json.dumps(data)
+    else:
+        return False
 
 
 def redis_base(_id):
@@ -43,7 +42,7 @@ def redis_base(_id):
             r.set(_id, data)
             return data
 
-    try:
+    if data:
         return check_redis_data(), 200
-    except:
+    else:
         return f"Data with ID: {_id} doesn't exist. Error: Parameter needs to be a number between 1-100. ", 404
