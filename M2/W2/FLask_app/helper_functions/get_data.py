@@ -11,12 +11,15 @@ def api_data(url, _id):
     :param _id: id passed from user via url parameter
     :return: if id is in fetched data: json data, if not: False
     """
-    r = requests.get(url + str(_id))
-    data = r.json()
-    if data:
-        return json.dumps(data)
-    else:
-        return False
+    try:
+        r = requests.get(url + str(_id))
+        data = r.json()
+        if data:
+            return json.dumps(data)
+        else:
+            return False
+    except ValueError:
+        return {"message": "Parameter is not valid"}
 
 
 def redis_base(_id):
