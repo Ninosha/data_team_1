@@ -44,5 +44,4 @@ def redis_base(_id):
     if data:
         return check_redis_data()
     else:
-        return "error: data with the id doesn't exist"
-#
+        return f"error: data with ID: {_id} doesn't exist"
