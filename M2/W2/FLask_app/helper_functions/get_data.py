@@ -1,5 +1,6 @@
 import redis
 import requests
+import json
 
 BASE_URL = "https://jsonplaceholder.typicode.com/posts/"
 
@@ -15,7 +16,7 @@ def api_data(url, _id):
         r = requests.get(url + str(_id))
         data = r.json()
         if data:
-            return data
+            return json.dumps(data)
         else:
             return False
     except ConnectionError as e:
