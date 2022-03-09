@@ -10,6 +10,6 @@ def home():
 
 @app.route("/<_id>")
 def get_data(_id):
-    response = (redis_base(_id))
+    response = redis_base(_id)
     return response
 #
