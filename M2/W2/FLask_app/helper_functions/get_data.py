@@ -16,7 +16,7 @@ def api_data(url, _id):
         r = requests.get(url + str(_id))
         data = r.json()
         if data:
-            return json.dumps(data)
+            return data
         else:
             return False
     except ConnectionError as e:
@@ -42,6 +42,7 @@ def redis_base(_id):
         res_key = r.get(_id)
         if bool(res_key):
             print("getting from redis_task")
+            print(type(res_key))
             return res_key
         else:
             print("setting in redis_task")
