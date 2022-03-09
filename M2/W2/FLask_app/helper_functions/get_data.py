@@ -42,6 +42,6 @@ def redis_base(_id):
             return data
 
     if data:
-        return check_redis_data()
+        return check_redis_data(), 200
     else:
-        return f"error: data with ID: {_id} doesn't exist"
+        return f"Error: data with ID: {_id} doesn't exist", 404
