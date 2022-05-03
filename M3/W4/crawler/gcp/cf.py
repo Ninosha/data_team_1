@@ -23,3 +23,7 @@ def hello_world(request):
                "location": table.location, "fields": fields,
                "records": table.num_rows}
 
+# package>=version
+fsspec
+google-cloud-bigquery
+gcfs
