@@ -14,23 +14,15 @@ from pprint import pprint
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = url
 client = bigquery.Client()
 dataset = client.get_dataset("123")
-dataset_meta = {"id": dataset.dataset_id,
-                "project": dataset.project,
-                "created": dataset.created,
-                "updated": dataset.modified,
-                "location": dataset.location,
-                "description": dataset.description,
-                "model": dataset.model}
-pprint(dataset_meta)
+
+
 
 file_url = "/home/ninosha/Downloads/products.csv"
 table_id = "nino-project-349013.123.test_data"
 
 table = client.get_table(table_id)
 
-if ":" in table.full_table_id:
-    sch = f"{dataset.project}.{dataset.dataset_id}.{table.table_id}"
-    print(sch, )
+
 fields = [{"field_name": field.name,
            "type": field.field_type,
            "mode": field.mode,
@@ -41,17 +33,23 @@ res = {"creation_date": table.created, "last_update": table.modified,
        "id": table_id, "description": table.description,
        "location": table.location, "fields": fields,
        "records": table.num_rows}
-from pprint import pprint
+
+
 
 datasets = client.list_datasets()
 
-print(datasets)
 for dataset in datasets:
+    dataset_meta = {"id": dataset.dataset_id,
+                    "project": dataset.project,
+                    "created": dataset.created,
+                    "updated": dataset.modified,
+                    "location": dataset.location,
+                    "description": dataset.description}
 
     tables = client.list_tables(dataset.dataset_id)
 
+
     for table in tables:
-        print(table)
         table_full_id = f"{dataset.project}." \
                         f"{dataset.dataset_id}." \
                         f"{table.table_id}"
@@ -68,7 +66,8 @@ for dataset in datasets:
                "last_update": table.modified,
                "id": table.full_table_id,
                "description": table.description,
-               "location": table.location, "fields": fields,
+               "location": table.location,
+               "fields": fields,
                "records": table.num_rows}
 
 # bigquery_service = bigquery.Client()
