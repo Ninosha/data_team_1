@@ -16,12 +16,11 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = url
 client = bigquery.Client()
 dataset = client.get_dataset("123")
 
-
 file_url = "/home/ninosha/Downloads/products.csv"
 table_id = "nino-project-349013.123.test_data"
 
 table = client.get_table(table_id)
-
+print(table.full_table_id)
 fields = [{"field_name": field.name,
            "type": field.field_type,
            "mode": field.mode,
@@ -33,7 +32,7 @@ res = {"creation_date": table.created, "last_update": table.modified,
        "location": table.location, "fields": fields,
        "records": table.num_rows}
 from pprint import pprint
-pprint(res)
+
 
 
 
@@ -46,5 +45,5 @@ pprint(res)
 
 tables = client.list_tables("123")
 #
-# for table in tables:
-#     print(table.project, table.dataset_id, table_id, table.created)
+for table in tables:
+    print(table.project, table.dataset_id, "id", table.created)
