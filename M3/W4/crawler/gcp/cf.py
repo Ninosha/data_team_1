@@ -2,14 +2,24 @@ import os
 from google.cloud import bigquery
 
 
-def hello_world(request):
+# request
+def hello_world():
     project_name = "nino-project"
 
     client = bigquery.Client()
+    client.list_datasets()
+    dataset = client.get_dataset("123")
 
     tables = client.list_tables("123")
 
+
     for table in tables:
+        table_full_id = f"{dataset.project}." \
+                        f"{dataset.dataset_id}." \
+                        f"{table.table_id}"
+
+        table = client.get_table(table_full_id)
+
         fields = [{"field_name": field.name,
                    "type": field.field_type,
                    "mode": field.mode,
@@ -23,7 +33,6 @@ def hello_world(request):
                "location": table.location, "fields": fields,
                "records": table.num_rows}
 
+
 # package>=version
-fsspec
-google-cloud-bigquery
-gcfs
+hello_world()

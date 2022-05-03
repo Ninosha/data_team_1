@@ -1,5 +1,5 @@
 # table = client.get_table(table_id)
- # schema = table.schema
+# schema = table.schema
 #
 # job_config = bigquery.LoadJobConfig(
 #     source_format=bigquery.SourceFormat.CSV,
