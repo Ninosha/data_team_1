@@ -11,17 +11,14 @@ url = "/home/ninosha/Desktop/testing/DATA/nino-project-349013-" \
       "8a8d680f044d.json"
 project_name = "nino-project"
 from pprint import pprint
+
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = url
 client = bigquery.Client()
 dataset = client.get_dataset("123")
-
-
-
 file_url = "/home/ninosha/Downloads/products.csv"
 table_id = "nino-project-349013.123.test_data"
 
 table = client.get_table(table_id)
-
 
 fields = [{"field_name": field.name,
            "type": field.field_type,
@@ -34,11 +31,16 @@ res = {"creation_date": table.created, "last_update": table.modified,
        "location": table.location, "fields": fields,
        "records": table.num_rows}
 
-
-
 datasets = client.list_datasets()
-
+job_config = bigquery.LoadJobConfig(
+    source_format=bigquery.SourceFormat.CSV,
+    skip_leading_rows=1
+)
+job = bigquery.job.QueryJob.job_id
+print(job)
+print(job_config)
 for dataset in datasets:
+    dataset = client.get_dataset(dataset.dataset_id)
     dataset_meta = {"id": dataset.dataset_id,
                     "project": dataset.project,
                     "created": dataset.created,
@@ -47,7 +49,6 @@ for dataset in datasets:
                     "description": dataset.description}
 
     tables = client.list_tables(dataset.dataset_id)
-
 
     for table in tables:
         table_full_id = f"{dataset.project}." \
