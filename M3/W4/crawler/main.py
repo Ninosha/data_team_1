@@ -73,13 +73,22 @@ for dataset in datasets:
 
 dataset_df = pd.DataFrame(dataset_list)
 table_df = pd.DataFrame(tables_list)
-table_df = pd.DataFrame(test_meta)
+
 pprint(dataset_df)
 
 table_df.to_csv(
-    f'/home/ninosha/Desktop/data_team_1/M3/W4/crawler/table.csv'
+    f'/home/ninosha/Desktop/data_team_1/M3/W4/crawler/table.csv', index=False
 )
 
 dataset_df.to_csv(
-    f'/home/ninosha/Desktop/data_team_1/M3/W4/crawler/dataset.csv'
+    f'/home/ninosha/Desktop/data_team_1/M3/W4/crawler/dataset.csv', index=False
 )
+
+
+from datetime import datetime
+
+now = datetime.now()
+
+current_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+
+print("The current time is", current_time)

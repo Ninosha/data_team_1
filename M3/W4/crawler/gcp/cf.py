@@ -1,9 +1,18 @@
 import os
-from google.cloud import bigquery
 import pandas as pd
+from google.cloud import bigquery
+from datetime import datetime
 
 
 def metadata_to_storage(request):
+
+    """
+    function fetches metadata on datasets/tables from bigquery,
+    saves fetched data to bucket
+    :param request: request from workflow
+    :return: str/error
+    """
+
     try:
         # get environment variables
         storage_name = os.environ.get("storage_name")
@@ -29,9 +38,9 @@ def metadata_to_storage(request):
             dataset_meta = {"id": dataset.dataset_id,
                             "project": dataset.project,
                             "created": dataset.created.strftime(
-                                "%m/%d/%Y, %H:%M:%S"),
+                                "%m/%d/%Y %H:%M:%S"),
                             "updated": dataset.modified.strftime(
-                                "%m/%d/%Y, %H:%M:%S"),
+                                "%m/%d/%Y %H:%M:%S"),
                             "location": dataset.location,
                             "description": dataset.description}
             dataset_list.append(dataset_meta)
@@ -81,16 +90,33 @@ def metadata_to_storage(request):
         # convert each list of tables metadata to pandas dataframe
         table_df = pd.DataFrame(tables_list)
 
+        # get the current time
+        now = datetime.now()
+        current_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+
         # save dataset metadata to storage as csv file
         dataset_df.to_csv(
-            f'gs://{storage_name}/datasets.csv'
+            f'gs://{storage_name}/{dataset_dir}/{current_time}-datasets.csv',
+            index=False
         )
 
         # save tables metadata to storage as csv file
         table_df.to_csv(
-            f'gs://{storage_name}/tables.csv'
+            f'gs://{storage_name}/{table_dir}/{current_time}-tables.csv',
+            index=False
         )
+
+        return "metadata was uploaded to bucket"
 
     # returns error if attribute for dataset/table attribute not exists
     except AttributeError as e:
         return AttributeError(e)
+
+
+"""
+requirements:
+google-cloud-bigquery
+pandas
+fsspec
+gcsfs
+"""
