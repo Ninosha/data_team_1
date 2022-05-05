@@ -92,7 +92,7 @@ def metadata_to_storage(request):
 
         # get the current time
         now = datetime.now()
-        current_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+        current_time = now.strftime("%m/%m.%d.%Y, %H:%M:%S")
 
         # save dataset metadata to storage as csv file
         dataset_df.to_csv(
