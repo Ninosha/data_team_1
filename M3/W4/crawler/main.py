@@ -27,9 +27,9 @@ for dataset in datasets:
     dataset_meta = {"id": dataset.dataset_id,
                     "project": dataset.project,
                     "created": dataset.created.strftime(
-                        "%m/%d/%Y, %H:%M:%S"),
+                        "%m/%d/%Y %H:%M:%S"),
                     "updated": dataset.modified.strftime(
-                        "%m/%d/%Y, %H:%M:%S"),
+                        "%m/%d/%Y %H:%M:%S"),
                     "location": dataset.location,
                     "description": dataset.description}
     dataset_list.append(dataset_meta)
@@ -45,26 +45,23 @@ for dataset in datasets:
 
         fields = [{
             "field_name": field.name,
-            "type": field.field_type,
-            "mode": field.mode,
-            "description": field.description}
+            "type": field.field_type}
             for field in table.schema]
-
+        test_meta = {"fields": fields,
+                     "test": "test"}
         table_meta = {"dataset": dataset.full_dataset_id,
                       "creation_date": table.created.strftime(
-                          "%m/%d/%Y, %H:%M:%S"),
+                          "%m/%d/%Y %H:%M:%S"),
                       "last_update": table.modified.strftime(
-                          "%m/%d/%Y, %H:%M:%S"),
+                          "%m/%d/%Y %H:%M:%S"),
                       "id": table.full_table_id,
-                      "description": table.description,
                       "location": table.location,
                       "fields": fields,
-                      "records": table.num_rows,
-                      "size": table.__sizeof__(),
+                      "row_number": table.num_rows,
+                      "table_size": table.__sizeof__(),
                       "expiration_date": table.expires.strftime(
                           "%m/%d/%Y") if table.expires else None,
-                      "partitioning": table.partitioning_type,
-                      "partitioning_expiration": table.partition_expiration}
+                      "partitioning": table.partitioning_type}
 
         tables_list.append(table_meta)
 
@@ -76,5 +73,13 @@ for dataset in datasets:
 
 dataset_df = pd.DataFrame(dataset_list)
 table_df = pd.DataFrame(tables_list)
+table_df = pd.DataFrame(test_meta)
 pprint(dataset_df)
-pprint(table_df["partitioning_expiration"])
+
+table_df.to_csv(
+    f'/home/ninosha/Desktop/data_team_1/M3/W4/crawler/table.csv'
+)
+
+dataset_df.to_csv(
+    f'/home/ninosha/Desktop/data_team_1/M3/W4/crawler/dataset.csv'
+)

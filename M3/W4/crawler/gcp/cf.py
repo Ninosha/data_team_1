@@ -20,6 +20,9 @@ def metadata_to_storage(request):
         # get list of dataset client has
         datasets = client.list_datasets()
 
+        dataset_list = []
+        tables_list = []
+
         # loop through datasets, fetch metadata from each dataset
         for dataset in datasets:
             dataset = client.get_dataset(dataset.dataset_id)
@@ -31,14 +34,7 @@ def metadata_to_storage(request):
                                 "%m/%d/%Y, %H:%M:%S"),
                             "location": dataset.location,
                             "description": dataset.description}
-
-            # convert each dataset dict metadata to pandas dataframe
-            dataset_df = pd.DataFrame([dataset_meta])
-
-            # save dataset metadata to storage as csv file
-            dataset_df.to_csv(
-                f'gs://{storage_name}/{dataset_dir}/{dataset.dataset_id}.csv'
-            )
+            dataset_list.append(dataset_meta)
 
             # get tables list of each dataset
             tables = client.list_tables(dataset.dataset_id)
@@ -54,46 +50,47 @@ def metadata_to_storage(request):
                 table = client.get_table(table_full_id)
 
                 # get fields from table schema
-                fields = [{
-                    "field_name": field.name,
-                    "type": field.field_type,
-                    "mode": field.mode,
-                    "description": field.description}
+                fields = [
+                    {
+                        "field_name": field.name,
+                        "type": field.field_type,
+                        "mode": field.mode
+                    }
                     for field in table.schema]
 
+                # create final table metadata dictionary
                 table_meta = {"dataset": dataset.full_dataset_id,
                               "creation_date": table.created.strftime(
-                                  "%m/%d/%Y, %H:%M:%S"),
+                                  "%m/%d/%Y %H:%M:%S"),
                               "last_update": table.modified.strftime(
-                                  "%m/%d/%Y, %H:%M:%S"),
+                                  "%m/%d/%Y %H:%M:%S"),
                               "id": table.full_table_id,
-                              "description": table.description,
                               "location": table.location,
-                              "field_name": fields["field_name"],
-                              "field_type": fields["type"],
-                              "field_mode": fields["mode"],
-                              "field_description": fields["description"],
-                              "records": table.num_rows,
-                              "size": table.__sizeof__(),
-
+                              "fields": fields,
+                              "row_number": table.num_rows,
+                              "table_size": table.__sizeof__(),
                               "expiration_date": table.expires.strftime(
-                                  "%m/%d/%Y")
-                              if table.expires else None,
+                                  "%m/%d/%Y") if table.expires else None,
+                              "partitioning": table.partitioning_type}
 
-                              "partitioning": table.partitioning_type,
-                              "partitioning_expiration": table.partition_expiration}
+                tables_list.append(table_meta)
 
-                table_df = pd.DataFrame([table_meta])
+        # convert each list of dataset metadata to pandas dataframe
+        dataset_df = pd.DataFrame(dataset_list)
 
-                table_df.to_csv(
-                    f'gs://{storage_name}/{table_dir}/{table.table_id}.csv'
-                )
+        # convert each list of tables metadata to pandas dataframe
+        table_df = pd.DataFrame(tables_list)
 
+        # save dataset metadata to storage as csv file
+        dataset_df.to_csv(
+            f'gs://{storage_name}/datasets.csv'
+        )
+
+        # save tables metadata to storage as csv file
+        table_df.to_csv(
+            f'gs://{storage_name}/tables.csv'
+        )
+
+    # returns error if attribute for dataset/table attribute not exists
     except AttributeError as e:
         return AttributeError(e)
-
-    except Exception as e:
-        return Exception(e)
-
-schema:
-{field_name: field_type, field_name: field_type}
