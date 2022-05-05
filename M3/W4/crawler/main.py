@@ -7,6 +7,7 @@ module you can import, it can go to one's bigquery with credentials json
 import os
 from google.cloud import bigquery
 from pprint import pprint
+import pandas as pd
 
 url = "/home/ninosha/Downloads/nino-project-349013-28e265e0c120.json"
 project_name = "nino-project"
@@ -19,6 +20,8 @@ table_id = "nino-project-349013.123.test_data"
 
 datasets = client.list_datasets()
 
+dataset_list = []
+tables_list = []
 for dataset in datasets:
     dataset = client.get_dataset(dataset.dataset_id)
     dataset_meta = {"id": dataset.dataset_id,
@@ -29,11 +32,11 @@ for dataset in datasets:
                         "%m/%d/%Y, %H:%M:%S"),
                     "location": dataset.location,
                     "description": dataset.description}
+    dataset_list.append(dataset_meta)
 
     tables = client.list_tables(dataset.dataset_id)
 
     for table in tables:
-        print(table.table_id)
         table_full_id = f"{dataset.project}." \
                         f"{dataset.dataset_id}." \
                         f"{table.table_id}"
@@ -58,16 +61,20 @@ for dataset in datasets:
                       "fields": fields,
                       "records": table.num_rows,
                       "size": table.__sizeof__(),
-                      "expiration_date": table.expires,
+                      "expiration_date": table.expires.strftime(
+                          "%m/%d/%Y") if table.expires else None,
                       "partitioning": table.partitioning_type,
                       "partitioning_expiration": table.partition_expiration}
 
-
+        tables_list.append(table_meta)
 
         # try:
         #     parts = client.list_partitions(table)
         #     print(f"{parts=}")
         # except:
         #     continue
-        pprint(dataset_meta)
-        pprint(table_meta)
+
+dataset_df = pd.DataFrame(dataset_list)
+table_df = pd.DataFrame(tables_list)
+pprint(dataset_df)
+pprint(table_df["partitioning_expiration"])

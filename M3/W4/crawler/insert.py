@@ -24,6 +24,6 @@ with open(file_url, "rb") as source_file:
 
 job.result()  # Waits for the job to complete.
 
-metdata:
-dataset1: dataset csv meta, table: tablebi
-dataset2
+# metdata:
+# dataset1: dataset csv meta, table: tablebi
+# dataset2
