@@ -1,0 +1,8 @@
+main:
+- crawler:
+    call: http.post
+    args:
+        url: https://europe-west1-nino-project-349013.cloudfunctions.net/crawler
+    result:
+- return_result:
+    return: "success"
