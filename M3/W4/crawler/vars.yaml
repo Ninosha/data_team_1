@@ -1,0 +1,3 @@
+storage_name: table_metadata_bucket
+config_url: config.json
+dest_dataset: table_metadata

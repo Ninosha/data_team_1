@@ -1,0 +1,13 @@
+{
+  "data": {
+    "parse_all_datasets": false,
+    "parse_datasets": {
+      "normalized_data": [
+        "email"
+      ],
+      "other_dataset": [
+        "new_table", "test2"
+      ]
+    }
+  }
+}
