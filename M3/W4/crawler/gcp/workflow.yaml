@@ -1,8 +1,18 @@
-#main:
-#- crawler:
-#    call: http.post
-#    args:
-#        url: https://europe-west1-nino-project-349013.cloudfunctions.net/crawler
-#    result:
-#- return_result:
-#    return: "success"
+
+- invoke_crawler:
+    call: http.post
+    args:
+        url:  https://europe-west1-cedar-heaven-349107.cloudfunctions.net/crawler
+        headers:
+            Content-Type: "application/json"
+        body:
+            data: {
+                        "normalized_data": [
+                            "email"
+                        ],
+                        "other_dataset": [
+                            "new_table", "test2"
+                        ]
+                        }
+
+    result: "function triggered"
